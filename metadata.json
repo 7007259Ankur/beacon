@@ -1,0 +1,9 @@
+{
+  "name": "Beacon",
+  "description": "A clean, professional social network connecting people through meaningful interactions and vibrant community feeds.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": []
+}

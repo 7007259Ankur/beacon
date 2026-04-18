@@ -1,0 +1,96 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "username": { "type": "string" },
+        "fullName": { "type": "string" },
+        "bio": { "type": "string" },
+        "avatarUrl": { "type": "string", "format": "uri" },
+        "coverPhotoUrl": { "type": "string", "format": "uri" },
+        "location": { "type": "string" },
+        "website": { "type": "string", "format": "uri" },
+        "isPrivate": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["username", "fullName", "createdAt"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "User shared content",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "content": { "type": "string" },
+        "imageUrls": { "type": "array", "items": { "type": "string", "format": "uri" } },
+        "visibility": { "type": "string", "enum": ["public", "friends_only", "private"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "likesCount": { "type": "integer" },
+        "commentsCount": { "type": "integer" }
+      },
+      "required": ["authorId", "content", "createdAt"]
+    },
+    "Comment": {
+      "title": "Comment",
+      "description": "Reaction to a post",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "postId": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "postId", "content", "createdAt"]
+    },
+    "Follow": {
+      "title": "Follow",
+      "description": "Social connection between users",
+      "type": "object",
+      "properties": {
+        "followerId": { "type": "string" },
+        "followingId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["followerId", "followingId", "createdAt"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User activity alerts",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "actorId": { "type": "string" },
+        "type": { "type": "string", "enum": ["like", "comment", "follow", "mention", "message"] },
+        "postId": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "actorId", "type", "isRead", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Stores user profiles"
+    },
+    "/posts/{postId}": {
+      "schema": "Post",
+      "description": "Stores shared posts"
+    },
+    "/posts/{postId}/comments/{commentId}": {
+      "schema": "Comment",
+      "description": "Stores comments on posts"
+    },
+    "/follows/{followId}": {
+      "schema": "Follow",
+      "description": "Stores follow relationships"
+    },
+    "/notifications/{notifId}": {
+      "schema": "Notification",
+      "description": "Stores user notifications"
+    }
+  }
+}

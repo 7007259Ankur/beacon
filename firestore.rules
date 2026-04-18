@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    // Users
+    match /users/{userId} {
+      function isValidUser(data) {
+        return data.username is string && data.username.size() >= 3 && data.username.size() <= 30
+          && data.fullName is string && data.fullName.size() <= 50;
+      }
+      allow read: if isSignedIn();
+      allow create: if isOwner(userId) && isValidUser(incoming());
+      allow update: if isOwner(userId) && isValidUser(incoming())
+        || (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['followersCount', 'followingCount']));
+    }
+
+    // Posts
+    match /posts/{postId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().authorId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        isOwner(existing().authorId)
+        || incoming().diff(existing()).affectedKeys().hasOnly(['likesCount', 'commentsCount'])
+      );
+      allow delete: if isOwner(existing().authorId);
+
+      match /likes/{userId} {
+        allow read: if isSignedIn();
+        allow write: if isOwner(userId);
+      }
+
+      match /comments/{commentId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && incoming().authorId == request.auth.uid;
+        allow delete: if isOwner(existing().authorId);
+      }
+    }
+
+    // Follows
+    match /follows/{followId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && incoming().followerId == request.auth.uid
+                    && incoming().followerId != incoming().targetId;
+      allow delete: if isSignedIn() && existing().followerId == request.auth.uid;
+    }
+
+    // Conversations
+    match /conversations/{convId} {
+      allow read: if isSignedIn() && request.auth.uid in existing().participants;
+      allow create: if isSignedIn() && request.auth.uid in incoming().participants;
+      allow update: if isSignedIn() && request.auth.uid in existing().participants;
+
+      match /messages/{msgId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && incoming().senderId == request.auth.uid;
+      }
+    }
+
+    // Notifications
+    match /notifications/{notifId} {
+      allow read, delete: if isSignedIn() && existing().targetId == request.auth.uid;
+      allow create: if isSignedIn();
+    }
+  }
+}
