@@ -2,7 +2,7 @@
 
 A modern social media app — share posts, follow people, chat, and get notified in real time.
 
-**Live site → [beacon.netlify.app](https://beacon.netlify.app)**
+**Live site → [beacon.netlify.app](https://beaconv.netlify.app/)**
 
 ---
 
