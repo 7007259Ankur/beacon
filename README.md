@@ -1,20 +1,44 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Beacon 🔦
 
-# Run and deploy your AI Studio app
+A modern social media app — share posts, follow people, chat, and get notified in real time.
 
-This contains everything you need to run your app locally.
+**Live site → [beacon.netlify.app](https://beacon.netlify.app)**
 
-View your app in AI Studio: https://ai.studio/apps/885ab30d-0382-49aa-8c62-107ebde9cceb
+---
 
-## Run Locally
+## Features
 
-**Prerequisites:**  Node.js
+- Google Sign-In
+- Create posts with images
+- Like, comment & reply, share
+- Follow / unfollow users
+- Real-time messaging
+- Notifications (likes, follows, messages)
+- Edit profile & avatar
+- Installable as a PWA on Android
 
+## Tech Stack
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- React + TypeScript + Vite
+- Firebase (Auth + Firestore)
+- Cloudinary (image uploads)
+- Tailwind CSS + shadcn/ui
+
+## Local Setup
+
+```bash
+git clone https://github.com/7007259Ankur/beacon.git
+cd beacon
+npm install
+cp .env.example .env   # fill in your keys
+npm run dev
+```
+
+### Required env vars
+
+```
+VITE_CLOUDINARY_CLOUD_NAME=
+VITE_CLOUDINARY_UPLOAD_PRESET=
+```
+
+Firebase config is in `firebase-applet-config.json`.
