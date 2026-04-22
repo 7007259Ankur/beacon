@@ -14,13 +14,9 @@ service cloud.firestore {
 
     // Users
     match /users/{userId} {
-      function isValidUser(data) {
-        return data.username is string && data.username.size() >= 3 && data.username.size() <= 30
-          && data.fullName is string && data.fullName.size() <= 50;
-      }
       allow read: if isSignedIn();
-      allow create: if isOwner(userId) && isValidUser(incoming());
-      allow update: if isOwner(userId) && isValidUser(incoming())
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId)
         || (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['followersCount', 'followingCount']));
     }
 

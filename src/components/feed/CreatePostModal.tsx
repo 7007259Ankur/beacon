@@ -80,8 +80,8 @@ export function CreatePostModal() {
         render={
           <button className="flex items-center w-full gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:bg-slate-50 transition-colors">
             <Avatar className="w-10 h-10">
-              <AvatarImage src="https://picsum.photos/seed/user1/100/100" />
-              <AvatarFallback>U</AvatarFallback>
+              <AvatarImage src={profile?.avatarUrl} />
+              <AvatarFallback>{profile?.fullName?.[0] ?? "U"}</AvatarFallback>
             </Avatar>
             <div className="flex-1 text-left text-slate-400">Share something with the community...</div>
             <div className="text-primary">
@@ -97,10 +97,10 @@ export function CreatePostModal() {
         <div className="p-4 space-y-4">
           <div className="flex items-center gap-3">
             <Avatar className="w-10 h-10">
-              <AvatarImage src="https://picsum.photos/seed/user1/100/100" />
-              <AvatarFallback>U</AvatarFallback>
+              <AvatarImage src={profile?.avatarUrl} />
+              <AvatarFallback>{profile?.fullName?.[0] ?? "U"}</AvatarFallback>
             </Avatar>
-            <span className="font-semibold text-slate-900">current_user</span>
+            <span className="font-semibold text-slate-900">{profile?.fullName ?? "User"}</span>
           </div>
 
           <Textarea

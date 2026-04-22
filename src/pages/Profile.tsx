@@ -22,6 +22,7 @@ export function ProfilePage() {
   const [editFullName, setEditFullName] = useState("");
   const [editAvatarUrl, setEditAvatarUrl] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   const openEdit = () => {
     setEditBio(profile?.bio || "");
@@ -37,11 +38,16 @@ export function ProfilePage() {
     input.onchange = async () => {
       const file = input.files?.[0];
       if (!file || !user) return;
+      setUploadingAvatar(true);
       try {
         const url = await uploadImage(file, "avatars");
         setEditAvatarUrl(url);
-      } catch {
-        toast.error("Failed to upload photo");
+        toast.success("Photo uploaded!");
+      } catch (err) {
+        console.error("Upload error:", err);
+        toast.error("Failed to upload photo — check Cloudinary env vars");
+      } finally {
+        setUploadingAvatar(false);
       }
     };
     input.click();
@@ -191,11 +197,20 @@ export function ProfilePage() {
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <div className="flex flex-col items-center gap-3">
-              <Avatar className="w-20 h-20 cursor-pointer" onClick={handleAvatarPick}>
-                <AvatarImage src={editAvatarUrl} />
-                <AvatarFallback>{editFullName[0]}</AvatarFallback>
-              </Avatar>
-              <Button variant="outline" size="sm" onClick={handleAvatarPick}>Change Photo</Button>
+              <div className="relative">
+                <Avatar className="w-20 h-20 cursor-pointer" onClick={handleAvatarPick}>
+                  <AvatarImage src={editAvatarUrl} />
+                  <AvatarFallback>{editFullName[0]}</AvatarFallback>
+                </Avatar>
+                {uploadingAvatar && (
+                  <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
+              </div>
+              <Button variant="outline" size="sm" onClick={handleAvatarPick} disabled={uploadingAvatar}>
+                {uploadingAvatar ? "Uploading..." : "Change Photo"}
+              </Button>
             </div>
             <div className="space-y-2">
               <Label>Full Name</Label>
