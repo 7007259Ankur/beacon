@@ -6,6 +6,8 @@ A modern social media app — share posts, follow people, chat, and get notified
 
 ---
 
+[![Star History Chart](https://api.star-history.com/svg?repos=7007259Ankur/Fast-docker-graphql&type=date&legend=top-left)](https://www.star-history.com/#7007259Ankur/beacon&type=date&legend=top-left)
+
 ## Features
 
 - Google Sign-In
